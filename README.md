@@ -29,16 +29,16 @@ vue3 从 `vqiankun/vue3` 导入
 
 - `createSubApp`
 
-| 参数           | 描述                               |
-| -------------- | ---------------------------------- |
-| routes         | 路由表                             |
-| mode           | 路由模式，必选                     |
-| entryComponent | 入口组件                           |
-| mount          | 挂载点                             |
-| hook           | 钩子函数，可返回 vue实例 和 router |
-| created        | 钩子函数，子应用创建完成           |
-| mounted        | 钩子函数，子应用挂载创建完成       |
-| unmounted      | 钩子函数，子应用卸载完成           |
+| 参数           | 描述                                   |
+| -------------- | -------------------------------------- |
+| routes         | 路由表                                 |
+| mode           | 路由模式，必选                         |
+| entryComponent | 入口组件                               |
+| mount          | 挂载点                                 |
+| hook           | 钩子函数可选，可返回 vue实例 和 router |
+| created        | 钩子函数可选，子应用创建完成           |
+| mounted        | 钩子函数可选，子应用挂载创建完成       |
+| unmounted      | 钩子函数可选，子应用卸载完成           |
 
 ## 例子
 
