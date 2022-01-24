@@ -14,6 +14,8 @@ interface Vue2appOption {
     mode: RouterMode;
     entryComponent: Component,
     mount: string;
+    store?: any,//vuex
+    pinia?: any,//pinia 约等于 vuex
     subApps?: Array<RegistrableApp<ObjectType>> //主应用填写
     hook?: ({ app, router }: HookParams) => void //钩子函数，抛出 app 和路由 等其它生命周期钩子
 }
@@ -56,8 +58,14 @@ export function createMainApp(appOption: Vue2appOption) {
             routes: appOption.routes,
         });
 
+
+        const option: ObjectType = {}
+        if (appOption.store) option.store = appOption.store
+        if (appOption.pinia) option.pinia = appOption.pinia
+
         app = new Vue({
             router,
+            ...option,
             render: h => h(entryComponent)
         })
 
@@ -102,8 +110,14 @@ export function createSubApp(appOption: SubVue2appOption) {
             routes: appOption.routes,
         });
 
+
+        const option: ObjectType = {}
+        if (appOption.store) option.store = appOption.store
+        if (appOption.pinia) option.pinia = appOption.pinia
+
         app = new Vue({
             router,
+            ...option,
             render: h => h(entryComponent)
         })
 
@@ -138,7 +152,8 @@ export function createSubApp(appOption: SubVue2appOption) {
     const life = {
         bootstrap,
         mount,
-        unmount
+        unmount,
+        router
     }
 
     return life

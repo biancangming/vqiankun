@@ -2,10 +2,6 @@ import type { Options as ESBuildOptions } from 'rollup-plugin-esbuild'
 import esbuild from 'rollup-plugin-esbuild'
 import dts from 'rollup-plugin-dts'
 import type { RollupOptions } from 'rollup'
-import { readFileSync } from 'fs'
-import path from 'path'
-
-
 
 const configs: RollupOptions[] = []
 
@@ -80,7 +76,7 @@ configs.push(
         ],
     },
     {
-        input: vue3input,
+        input: vue2input,
         output: {
             file: createOutputPath('vue2', 'd.ts'),
             format: 'es',

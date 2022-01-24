@@ -24,6 +24,8 @@ vue3 从 `vqiankun/vue3` 导入
 | mode           | 路由模式，必选                                    |
 | entryComponent | 入口组件                                          |
 | mount          | 挂载点,index.html app id                          |
+| store          | 仅vue2,vuex 注册, store对象                       |
+| pinia          | 仅vue2,pinia对象，参考 https://pinia.vuejs.org/   |
 | subApps        | 子应用列表, 参考 https://qiankun.umijs.org/zh/api |
 | hook           | 钩子函数可选，可返回 vue实例 和 router            |
 
@@ -62,7 +64,7 @@ createMainApp({
 import "vqiankun/public-path" //首行导入
 import { createSubApp } from "vqiankun/vue3"
 
-export const { bootstrap, mount, unmount } = createSubApp({  //此处必须抛出 bootstrap, mount, unmount
+export const { bootstrap, mount, unmount } = createSubApp({  //此处必须抛出 bootstrap, mount, unmount, 可选 router
     routes: routes,
     mode: 'history',
     mount: "#sub1", //index.html 的id，一般以应用名称作为Id 比较容易辨识
@@ -72,7 +74,7 @@ export const { bootstrap, mount, unmount } = createSubApp({  //此处必须抛�
 ```
 
 ## `vue.config.js` 环境配置（仅限子应用，父应用无需配置）
-
+- cli4
 ```js
 const { name } = require("./package");  //导入应用名称，子应用名称必须是唯一
 module.exports = {
@@ -91,4 +93,28 @@ module.exports = {
     },
   },
 };
+```
+
+- cli5
+
+```js
+const { defineConfig } = require("@vue/cli-service");
+const { name } = require("./package"); //导入应用名称，子应用名称必须是唯一
+
+module.exports = defineConfig({
+  devServer: {
+    port: 1111, //子应用端口号必须是固定
+    headers: {
+      "Access-Control-Allow-Origin": "*", // 允许子应用跨域
+    },
+  },
+  // 自定义webpack配置
+  configureWebpack: {
+    output: {
+      library: `${name}-[name]`,
+      libraryTarget: "umd", // 把子应用打包成 umd 库格式
+      chunkLoadingGlobal: `webpackJsonp_${name}`,
+    },
+  },
+});
 ```

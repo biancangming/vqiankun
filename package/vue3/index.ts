@@ -132,7 +132,8 @@ export function createSubApp(appOption: SubVue3appOption) {
     const life = {
         bootstrap,
         mount,
-        unmount
+        unmount,
+        router
     }
 
     return life
