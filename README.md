@@ -29,8 +29,6 @@ vue3 从 `vqiankun/vue3` 导入
 
 - `createSubApp`
 
-### 入参
-
 | 参数           | 描述                               |
 | -------------- | ---------------------------------- |
 | routes         | 路由表                             |
@@ -64,7 +62,7 @@ createMainApp({
 import "vqiankun/public-path" //首行导入
 import { createSubApp } from "vqiankun/vue3"
 
-export const { bootstrap, mount, unmount } = createSubApp({
+export const { bootstrap, mount, unmount } = createSubApp({  //此处必须抛出 bootstrap, mount, unmount
     routes: routes,
     mode: 'history',
     mount: "#sub1", //index.html 的id，一般以应用名称作为Id 比较容易辨识
