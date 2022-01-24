@@ -30,16 +30,18 @@ function createPackage() {
     //正式版逻辑, 如果为测试版本直接移除测试版本号
     if (arg === RELEASE) {
         let [newMain, newSecondary, newCorrect] = [Number(main), Number(secondary), Number(correct)]
-        // 修改版本号，每10个次要版本，一个主版本
-        if (correct < 10) {
-            newCorrect = Number(correct) + 1
-        } else {
-            newCorrect = 0
-            if (secondary < 10) {
-                newSecondary = Number(secondary) + 1
+        if (!beta) {
+            // 修改版本号，每10个次要版本，一个主版本
+            if (correct < 10) {
+                newCorrect = Number(correct) + 1
             } else {
-                newSecondary = 0
-                newMain = Number(main) + 1
+                newCorrect = 0
+                if (secondary < 10) {
+                    newSecondary = Number(secondary) + 1
+                } else {
+                    newSecondary = 0
+                    newMain = Number(main) + 1
+                }
             }
         }
         pkg.version = [newMain, newSecondary, newCorrect].join('.')

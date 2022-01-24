@@ -18,14 +18,14 @@ vue3 从 `vqiankun/vue3` 导入
 
 - `createMainApp`
 
-| 参数           | 描述                                   |
-| -------------- | -------------------------------------- |
-| routes         | 路由表                                 |
-| mode           | 路由模式，必选                         |
-| entryComponent | 入口组件                               |
-| mount          | 挂载点                                 |
-| subApps        | 子应用列表                             |
-| hook           | 钩子函数可选，可返回 vue实例 和 router |
+| 参数           | 描述                                              |
+| -------------- | ------------------------------------------------- |
+| routes         | 路由表                                            |
+| mode           | 路由模式，必选                                    |
+| entryComponent | 入口组件                                          |
+| mount          | 挂载点,index.html app id                          |
+| subApps        | 子应用列表, 参考 https://qiankun.umijs.org/zh/api |
+| hook           | 钩子函数可选，可返回 vue实例 和 router            |
 
 - `createSubApp`
 
@@ -34,7 +34,7 @@ vue3 从 `vqiankun/vue3` 导入
 | routes         | 路由表                                 |
 | mode           | 路由模式，必选                         |
 | entryComponent | 入口组件                               |
-| mount          | 挂载点                                 |
+| mount          | 挂载点,index.html app id               |
 | hook           | 钩子函数可选，可返回 vue实例 和 router |
 | created        | 钩子函数可选，子应用创建完成           |
 | mounted        | 钩子函数可选，子应用挂载创建完成       |
