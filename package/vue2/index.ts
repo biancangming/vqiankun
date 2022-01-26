@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig, RouterMode } from "vue-router";
 import Vue, { Component } from "vue"
 import { CombinedVueInstance } from 'vue/types/vue';
 import { unique } from "howtools"
-
+console.log(Vue.version)
 interface HookParams {
     app: CombinedVueInstance<Vue, object, object, object, Record<never, any>>;
     router: VueRouter

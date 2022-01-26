@@ -1,9 +1,20 @@
-import type { Options as ESBuildOptions } from 'rollup-plugin-esbuild'
 import esbuild from 'rollup-plugin-esbuild'
 import dts from 'rollup-plugin-dts'
-import type { RollupOptions } from 'rollup'
+import type { Options as ESBuildOptions } from 'rollup-plugin-esbuild'
+import type { RollupOptions, Plugin } from 'rollup'
 
 const configs: RollupOptions[] = []
+
+// const QIANKUN_IIFE = fs.readFileSync(require.resolve('qiankun/dist/index.umd.min.js'), 'utf-8')
+
+// const injectQianKun: Plugin[] = [
+//     {
+//         name: 'inject-vue-demi',
+//         renderChunk(code) {
+//             return `${QIANKUN_IIFE};\n;${code}`
+//         },
+//     }
+// ]
 
 const externals = [
     'howtools',
@@ -27,10 +38,13 @@ const esbuildMinifer = (options: ESBuildOptions) => {
     }
 }
 
-const vue2input = 'package/vue2/index.ts'
-const vue3input = 'package/vue3/index.ts'
+const vue2Input = 'package/vue2/index.ts'
+const vue3Input = 'package/vue3/index.ts'
+const pluginInput = 'package/plugin/index.ts'
+
 const iifeName = "vqiankun"
-function createOutputPath(prefix: 'vue2' | 'vue3', suffix: 'mjs' | 'cjs' | 'iife.js' | 'iife.min.js' | 'd.ts') {
+type prefixOption = 'vue2' | 'vue3' | 'plugin'
+function createOutputPath(prefix: prefixOption, suffix: 'mjs' | 'cjs' | 'iife.js' | 'iife.min.js' | 'd.ts') {
     return `dist/${prefix}/index.${suffix}`
 }
 
@@ -38,100 +52,63 @@ const iifeGlobals = {
     vqiankun: "vqiankun"
 }
 
+const baseConfig = (input: string, module: prefixOption): RollupOptions[] => {
+    return [
+        {
+            input,
+            output: [
+                {
+                    file: createOutputPath(module, 'mjs'),
+                    format: 'es',
+                },
+                {
+                    file: createOutputPath(module, 'cjs'),
+                    format: 'cjs',
+                },
+                {
+                    file: createOutputPath(module, 'iife.js'),
+                    format: 'iife',
+                    name: iifeName,
+                    extend: true,
+                    globals: iifeGlobals,
+                },
+                {
+                    file: createOutputPath(module, 'iife.min.js'),
+                    format: 'iife',
+                    name: iifeName,
+                    extend: true,
+                    globals: iifeGlobals,
+                    plugins: [
+                        // injectQianKun,
+                        esbuildMinifer({
+                            minify: true,
+                        }),
+                    ],
+                }
+            ],
+            plugins: [
+                esbuildPlugin
+            ],
+        },
+        {
+            input: input,
+            output: {
+                file: createOutputPath(module, 'd.ts'),
+                format: 'es',
+            },
+            plugins: dtsPlugin,
+            external: {
+                ...externals
+            }
+        },
+    ]
+}
+
+configs.push(...baseConfig(vue2Input, 'vue2'))
+configs.push(...baseConfig(vue3Input, 'vue3'))
+configs.push(...baseConfig(pluginInput, 'plugin'))
 
 configs.push(
-    {
-        input: vue2input,
-        output: [
-            {
-                file: createOutputPath('vue2', 'mjs'),
-                format: 'es',
-            },
-            {
-                file: createOutputPath('vue2', 'cjs'),
-                format: 'cjs',
-            },
-            {
-                file: createOutputPath('vue2', 'iife.js'),
-                format: 'iife',
-                name: iifeName,
-                extend: true,
-                globals: iifeGlobals,
-            },
-            {
-                file: createOutputPath('vue2', 'iife.min.js'),
-                format: 'iife',
-                name: iifeName,
-                extend: true,
-                globals: iifeGlobals,
-                plugins: [
-                    esbuildMinifer({
-                        minify: true,
-                    }),
-                ],
-            }
-        ],
-        plugins: [
-            esbuildPlugin
-        ],
-    },
-    {
-        input: vue2input,
-        output: {
-            file: createOutputPath('vue2', 'd.ts'),
-            format: 'es',
-        },
-        plugins: dtsPlugin,
-        external: {
-            ...externals
-        }
-    },
-    {
-        input: vue3input,
-        output: [
-            {
-                file: createOutputPath('vue3', 'mjs'),
-                format: 'es',
-            },
-            {
-                file: createOutputPath('vue3', 'cjs'),
-                format: 'cjs',
-            },
-            {
-                file: createOutputPath('vue3', 'iife.js'),
-                format: 'iife',
-                name: iifeName,
-                extend: true,
-                globals: iifeGlobals,
-            },
-            {
-                file: createOutputPath('vue3', 'iife.min.js'),
-                format: 'iife',
-                name: iifeName,
-                extend: true,
-                globals: iifeGlobals,
-                plugins: [
-                    esbuildMinifer({
-                        minify: true,
-                    }),
-                ],
-            }
-        ],
-        plugins: [
-            esbuildPlugin
-        ],
-    },
-    {
-        input: vue3input,
-        output: {
-            file: createOutputPath('vue3', 'd.ts'),
-            format: 'es',
-        },
-        plugins: dtsPlugin,
-        external: {
-            ...externals
-        }
-    },
     {
         input: 'package/public-path.ts',
         output: {
